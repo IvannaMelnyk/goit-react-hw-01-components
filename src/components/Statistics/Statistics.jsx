@@ -2,38 +2,25 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import s from './Statistic.module.css';
 
-const StatlistItem = ({ id, label, percentage }) => {
-  return (
-    <li
-      key={id}
-      className={s.statsItem}
-      style={{
-        backgroundColor: `rgb(${randomColor()},${randomColor()}, ${randomColor()})`,
-      }}
-    >
-      <span className={s.label}>{label}</span>
-      <span className={s.percentage}>{percentage}</span>
-    </li>
-  );
-};
-
-const StatsList = ({ items }) => {
-  if (items.length === 0) return null;
-  return <ul className={s.statsList}>{items.map(StatlistItem)}</ul>;
-};
-
-const Statistics = ({ items }) => {
+function Statistics({ title, stats }) {
   return (
     <section className={s.statistics}>
-      <h2 className={s.title}>Upload stats</h2>
+      {title && <h2 className={s.title}>{title}</h2>}
 
-      <StatsList items={items}></StatsList>
+      <ul className={s.statList}>
+        {stats.map(item => (
+          <li
+            className={s.item}
+            style={{ backgroundColor: randomColor() }}
+            key={item.id}
+          >
+            <span className={s.label}>{item.label}</span>
+            <span className={s.percentage}>{item.percentage}%</span>
+          </li>
+        ))}
+      </ul>
     </section>
   );
-};
-
-function randomColor() {
-  return Math.random() * 255;
 }
 
 Statistics.propTypes = {
@@ -41,8 +28,14 @@ Statistics.propTypes = {
   stats: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
+      label: PropTypes.string.isRequired,
+      percentage: PropTypes.number.isRequired,
     }),
   ),
 };
+
+function randomColor() {
+  return `#${Math.floor(Math.random() * 18778235).toString(16)}`;
+}
 
 export default Statistics;
